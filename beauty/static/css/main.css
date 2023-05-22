@@ -1069,10 +1069,10 @@ opacity: 0.3;
 }
 
 .panel {
-	display: none;
-  !max-height: 0;
-  !overflow: hidden;
-  !transition: max-height 0.2s ease-out;
+  display: none;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
 }
 
 .panel.active {
@@ -2177,7 +2177,7 @@ font-size: 24px;
 line-height: 127.52%;
 /* identical to box height, or 31px */
 
-margin-bottom: 4px
+margin-bottom: 4px;
 color: #262626;
 
 	}

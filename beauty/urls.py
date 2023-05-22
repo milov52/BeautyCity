@@ -4,7 +4,7 @@ from django.urls import path
 from beatycity import settings
 from beauty import views
 
-app_name = 'storage'
+app_name = 'beauty'
 
 urlpatterns = [
     path('', views.show_home, name='index'),
