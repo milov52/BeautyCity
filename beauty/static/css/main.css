@@ -126,6 +126,12 @@ cursor: pointer;
 display: flex;
 align-items: center;
 }
+.header__block_login {
+cursor: pointer;
+display: flex;
+align-items: center;
+}
+
 .header__account_img {
 	margin-right: 5px;
 	width: 30px;
@@ -133,16 +139,19 @@ height: 30px;
 }
 .header__block_auth__intro {
 	font-weight: 500;
-font-size: 12px;
-line-height: 127.52%;
-/* or 15px */
-
-
-/* черный */
-
-color: #323232;
-
+	font-size: 12px;
+	line-height: 127.52%;
+	color: #323232;
 }
+
+.header__block_login__intro {
+	display: inline-block;
+	font-weight: 500;
+	font-size: 12px;
+	line-height: 127.52%;
+	color: #323232;
+}
+
 
 /*banner*/
 .banner {
@@ -2246,6 +2255,7 @@ color: #262626;
 		max-width: 100%;
 	}
 	.header__block_auth__intro {display: none;}
+	.header__block_login__intro {display: none;}
 	.banner {
 	    padding-top: 48px;
 	    padding-bottom: 86px;
