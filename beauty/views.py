@@ -36,7 +36,12 @@ def show_home(request):
         if code.number == code_text:
             login(request, user, backend=settings.AUTHENTICATION_BACKENDS[0])
             code.delete()
-            return redirect("beauty:index")
+            return redirect("beauty:notes")
         else:
             print("wrong_code")
     return render(request, template)
+
+def show_notes(request):
+    template = "beautycity/notes.html"
+    context = {}
+    return render(request, template, {"context": context})
