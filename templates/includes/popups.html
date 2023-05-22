@@ -1,0 +1,89 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<div style="display: none;">
+  <div class="box-modal authPopup popup" id="authModal">
+    <div class="box-modal_close arcticmodal-close"><img src="{% static 'img/x.svg' %}" alt="x"></div>
+    <div class="popup__title authPopup__title">Войти по коду</div>
+    <p class="popup__text authPopup__text">Введите свой номер телефона, мы вышлем на него код</p>
+    <form action="." method="post" class="authPopup__form">
+      {% csrf_token %}
+      <div class="contacts__form_inputBlock">
+        <input type="text" name="tel" class="contacts__form_iunput" id="tel" type="tel" placeholder="+7(999)999-99-99"
+               pattern="\+7\s?[\(]{0,1}9[0-9]{2}[\)]{0,1}\s?\d{3}[-]{0,1}\d{2}[-]{0,1}\d{2}"" required="">
+      </div>
+      <div class="contacts__form_checkboxBlock fic">
+        <input type="checkbox" class="contacts__form_checkbox" checked="">
+        <span class="contacts__form_checkboxBlock__intro">Я согласен(а) с политикой конфидециальности</span>
+      </div>
+      <button type="submit" class="popup__btn authPopup__btn" id="authPopup__btn">Отправить</button>
+    </form>
+
+  </div>
+</div>
+<div style="display: none;">
+  <div class="box-modal confirmPopup popup" id="confirmModal">
+    <div class="box-modal_close arcticmodal-close"><img src="{% static 'img/x.svg' %}" alt="x"></div>
+    <div class="popup__title confirmPopup__title">Подтвердите номер</div>
+    <p class="popup__text confirmPopup__text">Введите код, полученный по SMS на номер +7 (928) 164 48 60</p>
+    <form action="." method="POST" class="confirmPopup__form" id="confirmPopup">
+      {% csrf_token %}
+      <div class="confirmPopup__number">
+        <input type="text" name="num1" class="tipsPopup__form_inputNum popup__input" placeholder="" required="">
+        <input type="text" name="num2" class="tipsPopup__form_inputNum popup__input" placeholder="" required="">
+        <input type="text" name="num3" class="tipsPopup__form_inputNum popup__input" placeholder="" required="">
+        <input type="text" name="num4" class="tipsPopup__form_inputNum popup__input" placeholder="" required="">
+      </div>
+      <button type="submit" class="popup__btn confirmPopup__btn">Отправить</button>
+    </form>
+    <div class="confirmPopup__sms">Если SMS не пришло вы можете <a href="#" class="popup__link">запросить код
+      повторно</a></div>
+    <div class="confirmPopup__changeNumber">
+      <a href="#" class="confirmPopup__link popup__link">Изменить номер телефона</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+        integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"
+        integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{% static 'js/air-datepicker.js' %}"></script>
+<script src="{% static 'js/jquery.arcticmodal-0.3.min.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+<script>
+    const button = document.getElementById('authPopup__btn');
+
+    button.addEventListener('click', async _ => {
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        let data = {
+            'phone_number': document.getElementById('tel').value
+        };
+
+        console.log('csrfmiddlewaretoken: ' + csrftoken);
+        console.log(data);
+
+        try {
+            const response = await fetch(
+                '{% url 'beauty:index' %}',
+                {
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'post',
+                    body: JSON.stringify(data),
+                }
+            );
+
+            console.log('Completed!', response);
+
+        } catch (err) {
+            console.error(`Error: ${err}`);
+        }
+    });
+</script>
