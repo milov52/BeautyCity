@@ -36,6 +36,8 @@ def show_home(request):
         if code.number == code_text:
             login(request, user, backend=settings.AUTHENTICATION_BACKENDS[0])
             code.delete()
+            if user.is_manager:
+                return redirect("beauty:manager")
             return redirect("beauty:notes")
         else:
             print("wrong_code")
