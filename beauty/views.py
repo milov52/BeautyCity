@@ -45,3 +45,13 @@ def show_notes(request):
     template = "beautycity/notes.html"
     context = {}
     return render(request, template, {"context": context})
+
+def show_service(request):
+    template = "beautycity/service.html"
+    context = {}
+    return render(request, template, {"context": context})
+
+def show_manager_page(request):
+    template = "beautycity/admin.html"
+    context = {}
+    return render(request, template, {"context": context})
