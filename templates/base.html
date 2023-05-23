@@ -15,12 +15,13 @@
 	<link rel="stylesheet" href="{% static 'css/simple.css' %}">
 	<link rel="stylesheet" href="{% static 'css/bootstrap-grid.min.css' %}">
 	<link rel="stylesheet" href="{% static 'css/main.css' %}">
+	<link rel="stylesheet" href="{% static 'css/air-datepicker.css' %}">
 </head>
 <body>
   {% include 'includes/mob_menu.html' %}
   {% include 'includes/header.html' %}
   {% block content %} {% endblock %}
-  {% include 'includes/popups.html' %}
   {% include 'includes/footer.html' %}
+  {% include 'includes/popups.html' %}
 </body>
 </html>
