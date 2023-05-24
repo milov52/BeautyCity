@@ -120,14 +120,3 @@ class ServiceSignUp(models.Model):
     class Meta:
         verbose_name = 'Запись'
         verbose_name_plural = 'Записи'
-
-
-class Payment(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-
-    def __str__(self):
-        return self.id
-
-    class Meta:
-        verbose_name = 'Платеж'
-        verbose_name_plural = 'Платежи'
