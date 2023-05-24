@@ -1,14 +1,28 @@
 import json
 
 from django.contrib.auth import login
+from django.db.models import Avg, Count
 from django.shortcuts import redirect, render
 
 from beatycity import settings
 from users.models import SMSCode, User
+from .models import Salon, Service, Master, Review
 
 
 def show_home(request):
     template = "beautycity/index.html"
+
+    salons = Salon.objects.all()
+    services = Service.objects.all()
+    masters = Master.objects.annotate(avg_stars=Avg('review__number_of_stars'), reviews_number=Count('review'))
+    reviews = Review.objects.all()
+
+    context = {
+        'salons': salons,
+        'services': services,
+        'masters': masters,
+        'reviews': reviews
+    }
 
     if request.method == "POST" and not "num1" in request.POST:
         if request.body:
@@ -41,17 +55,20 @@ def show_home(request):
             return redirect("beauty:notes")
         else:
             print("wrong_code")
-    return render(request, template)
+    return render(request, template, context)
+
 
 def show_notes(request):
     template = "beautycity/notes.html"
     context = {}
     return render(request, template, {"context": context})
 
+
 def show_service(request):
     template = "beautycity/service.html"
     context = {}
     return render(request, template, {"context": context})
+
 
 def show_manager_page(request):
     template = "beautycity/admin.html"
