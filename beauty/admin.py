@@ -9,4 +9,3 @@ admin.site.register(Review)
 admin.site.register(ConsultationRequest)
 admin.site.register(AvailableDateTime)
 admin.site.register(ServiceSignUp)
-
