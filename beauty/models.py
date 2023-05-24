@@ -7,6 +7,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 class Salon(models.Model):
     name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
+    photo = models.ImageField(upload_to='salon_photos/')
 
     def __str__(self):
         return self.name
@@ -48,7 +49,7 @@ class Master(models.Model):
     specialty = models.CharField(max_length=255)
     rating = models.IntegerField(null=True)     # Needs to automatically calculate
     experience = models.DurationField()
-    photo = models.ImageField(upload_to='service_photos/')
+    photo = models.ImageField(upload_to='master_photos/')
     salon = models.ForeignKey(Salon, on_delete=models.CASCADE)
 
     def __str__(self):
