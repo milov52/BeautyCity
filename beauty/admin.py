@@ -1,8 +1,7 @@
 from django.contrib import admin
-from .models import Salon, ServiceType, Service, Master, Review, ConsultationRequest, AvailableDateTime, ServiceSignUp
+from .models import Salon, Service, Master, Review, ConsultationRequest, AvailableDateTime, ServiceSignUp
 
 admin.site.register(Salon)
-admin.site.register(ServiceType)
 admin.site.register(Service)
 admin.site.register(Master)
 admin.site.register(Review)
