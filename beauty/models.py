@@ -17,11 +17,23 @@ class Salon(models.Model):
         verbose_name_plural = 'Салоны'
 
 
+class ServiceType(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Тип услуги'
+        verbose_name_plural = 'Типы услуг'
+
+
 class Service(models.Model):
     name = models.CharField(max_length=255)
     price = models.IntegerField()
     photo = models.ImageField(upload_to='service_photos/')
     salon = models.ForeignKey(Salon, on_delete=models.CASCADE)
+    type = models.ForeignKey(ServiceType, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name
