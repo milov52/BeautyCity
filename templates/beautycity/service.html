@@ -166,8 +166,11 @@
         <div class="time__btns">
           <div class="row">
             <div class="col-md-12">
-              <button class="time__btns_next">Далее</button>
-              <button class="time__btns_home">На главную</button>
+
+              <button onclick="location.href='{% url 'beauty:service-finally' %}'" class="time__btns_next">
+                       Далее</button>
+              <button onclick="location.href='{% url 'beauty:index' %}'" class="time__btns_next">
+                       На главную</button>
             </div>
           </div>
         </div>

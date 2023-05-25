@@ -112,6 +112,10 @@ def show_service(request):
     context = {}
     return render(request, template, {"context": context})
 
+def show_service_finally(request):
+    template = "beautycity/serviceFinally.html"
+    context = {}
+    return render(request, template, {"context": context})
 
 def show_manager_page(request):
     template = "beautycity/admin.html"
