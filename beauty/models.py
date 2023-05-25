@@ -117,7 +117,6 @@ class AvailableDateTime(models.Model):
 class ServiceSignUp(models.Model):
     service = models.ForeignKey(Service, on_delete=models.PROTECT)
     master = models.ForeignKey(Master, on_delete=models.PROTECT)
-    price = models.IntegerField()
     datetime = models.OneToOneField(AvailableDateTime, on_delete=models.PROTECT)
     salon = models.ForeignKey(Salon, on_delete=models.PROTECT)
     paid = models.BooleanField(default=False)
