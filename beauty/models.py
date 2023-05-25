@@ -122,7 +122,7 @@ class ServiceSignUp(models.Model):
     question = models.TextField(blank=True)
 
     def __str__(self):
-        return f'Запись {self.user.name} на {self.service.name}'
+        return f'Запись {self.user.username} на {self.service.name}'
 
     class Meta:
         verbose_name = 'Запись'
