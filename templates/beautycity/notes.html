@@ -87,7 +87,7 @@
                             {% for signup, date in signups_and_dates.items %}
                                 {% if not signup.paid %}
                                     <div class="notes__main_block">
-                                        <img src="{% static 'img/services/service3.svg' %}" alt="service1"
+                                        <img src="{{ signup.service.photo.url }}" alt="service1"
                                              class="notes__main_block__img">
                                         <div class="notes__main_block__elems">
                                             <div class="notes__main_block__header fic">
@@ -154,7 +154,7 @@
                             {% for signup, date in signups_and_dates.items %}
                                 {% if signup.paid %}
                                     <div class="notes__main_block">
-                                        <img src="{% static 'img/services/service1.svg' %}" alt="service1"
+                                        <img src="{{ signup.service.photo.url }}" alt="service1"
                                              class="notes__main_block__img">
                                         <div class="notes__main_block__elems">
                                             <div class="notes__main_block__header fic">
