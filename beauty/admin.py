@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import (
     Salon,
+    ServiceType,
     Service,
     Master,
     Review,
@@ -14,6 +15,12 @@ from .models import (
 class SalonAdmin(admin.ModelAdmin):
     search_fields = ['name', 'address']
     list_display = ['name', 'address']
+
+
+@admin.register(ServiceType)
+class ServiceTypeAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+    list_display = ['name']
 
 
 @admin.register(Service)
