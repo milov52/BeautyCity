@@ -23,5 +23,6 @@ class CustomUserAdmin(UserAdmin):
             )
         }),
     )
-    list_display = ['phone_number', 'username']
+
+    list_display = ['id', 'phone_number', 'first_name', 'photo']
     search_fields = ['phone_number', 'username']

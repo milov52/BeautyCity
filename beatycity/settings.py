@@ -139,7 +139,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 AUTH_USER_MODEL = 'users.User'
 
 AUTHENTICATION_BACKENDS = (
-
     'users.auth.PasswordlessAuthBackend',
     'django.contrib.auth.backends.ModelBackend'
 )

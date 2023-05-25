@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render
 
 from beatycity import settings
 from users.models import SMSCode, User
-from .models import Salon, Service, Master, Review, ServiceSignUp
+from .models import Master, Review, Salon, Service, ServiceSignUp
 
 
 def show_home(request):
@@ -29,7 +29,8 @@ def show_home(request):
             body_data = json.loads(request.body)
             phone_number = request.session['phone_number'] = body_data["phone_number"]
             try:
-                user, _ = User.objects.get_or_create(phone_number=phone_number)
+                user, _ = User.objects.get_or_create(username=phone_number,
+                                                     phone_number=phone_number)
                 SMSCode.objects.filter(client=user).delete()
                 SMSCode.objects.create(number='1234', client=user)
             except:
