@@ -129,6 +129,12 @@ def show_manager_page(request):
     return render(request, template, {"context": context})
 
 
+def update_paid_status(payment_id):
+    orders = ServiceSignUp.objects.filter(payment_id=payment_id).all()
+    for order in orders:
+        order.paid = True
+    ServiceSignUp.objects.bulk_update(orders, ['paid'])
+
 def make_payment_by_id(request, order_id):
     if request.method == "GET":
         Configuration.account_id = SHOP_ID
@@ -153,6 +159,8 @@ def make_payment_by_id(request, order_id):
         signup.save()
 
         confirmation_url = payment.confirmation.confirmation_url
+
+        update_paid_status(payment.id)
         return redirect(confirmation_url)
 
 def make_payment(request):
@@ -181,6 +189,9 @@ def make_payment(request):
 
         ServiceSignUp.objects.bulk_update(unpaids_signups, ['payment_id'])
         confirmation_url = payment.confirmation.confirmation_url
+
+        update_paid_status(payment.id)
+
         return redirect(confirmation_url)
 
 
