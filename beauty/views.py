@@ -1,13 +1,17 @@
 import json
+import uuid
 
 from django.contrib.auth import login
 from django.db.models import Avg, Count
 from django.shortcuts import redirect, render
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 
 from beatycity import settings
+from beatycity.settings import API_KEY, SHOP_ID
 from users.models import SMSCode, User
 from .models import Master, Review, Salon, Service, ServiceSignUp
-
+from yookassa import Configuration, Payment
 
 def show_home(request):
     template = "beautycity/index.html"
@@ -115,6 +119,7 @@ def show_service(request):
     print(context)
     return render(request, template, {"context": context})
 
+
 def show_service_finally(request):
     template = "beautycity/serviceFinally.html"
     for k, v in request:
@@ -123,7 +128,77 @@ def show_service_finally(request):
     print(context)
     return render(request, template, {"context": context})
 
+
 def show_manager_page(request):
     template = "beautycity/admin.html"
     context = {}
     return render(request, template, {"context": context})
+
+
+def make_payment_by_id(request, order_id):
+    if request.method == "GET":
+        Configuration.account_id = SHOP_ID
+        Configuration.secret_key = API_KEY
+
+        price = ServiceSignUp.objects.get(id=order_id).service.price
+        payment = Payment.create({
+            "amount": {
+                "value": price,
+                "currency": "RUB"
+            },
+            "confirmation": {
+                "type": "redirect",
+                "return_url": request.build_absolute_uri('/notes/')
+            },
+            "capture": True,
+            "description": f'Оплата по заказу {order_id}'
+        }, uuid.uuid4())
+
+        signup = ServiceSignUp.objects.get(id=order_id)
+        signup.payment_id = payment.id
+        signup.save()
+
+        confirmation_url = payment.confirmation.confirmation_url
+        return redirect(confirmation_url)
+
+def make_payment(request):
+    if request.method == "GET":
+        Configuration.account_id = SHOP_ID
+        Configuration.secret_key = API_KEY
+        price = 0
+        for unpaid_signup in ServiceSignUp.objects.filter(paid=False).select_related('service'):
+            price += unpaid_signup.service.price
+
+        payment = Payment.create({
+            "amount": {
+                "value": price,
+                "currency": "RUB"
+            },
+            "confirmation": {
+                "type": "redirect",
+                "return_url": request.build_absolute_uri('/notes/')
+            },
+            "capture": True,
+            "description": f'Оплата по заказам'
+        }, uuid.uuid4())
+        unpaids_signups =ServiceSignUp.objects.filter(paid=False).all()
+        for unpaids_signup in unpaids_signups:
+            unpaids_signup.payment_id = payment.id
+
+        ServiceSignUp.objects.bulk_update(unpaids_signups, ['payment_id'])
+        confirmation_url = payment.confirmation.confirmation_url
+        return redirect(confirmation_url)
+
+
+@csrf_exempt
+def update_payment_status(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        if body['object']['status'] == 'succeeded':
+            payment_id = body['object']['id']
+            orders = ServiceSignUp.objects.filter(payment_id=payment_id).all()
+            for order in orders:
+                order.paid = True
+            ServiceSignUp.objects.bulk_update(orders, ['paid'])
+    return HttpResponse(status=200)

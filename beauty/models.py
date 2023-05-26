@@ -119,6 +119,7 @@ class ServiceSignUp(models.Model):
     master = models.ForeignKey(Master, on_delete=models.PROTECT)
     datetime = models.OneToOneField(AvailableDateTime, on_delete=models.PROTECT)
     salon = models.ForeignKey(Salon, on_delete=models.PROTECT)
+    payment_id = models.CharField(verbose_name="Айди платежа", max_length=100, blank=True)
     paid = models.BooleanField(default=False)
     tips = models.IntegerField()
     # The following two fields are filled in automatically if the user exists

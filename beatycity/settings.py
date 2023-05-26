@@ -148,3 +148,7 @@ AUTHENTICATION_BACKENDS = (
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
+SHOP_ID = env.int('SHOP_ID')
+API_KEY = env.str('API_KEY')
+
+PAYMENT_GATEWAY_URL = 'https://api.yookassa.ru/v3/'
