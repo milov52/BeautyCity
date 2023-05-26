@@ -109,12 +109,18 @@ def show_notes(request):
 
 def show_service(request):
     template = "beautycity/service.html"
+    for k, v in request:
+        print(f"{k}: {v}")
     context = {}
+    print(context)
     return render(request, template, {"context": context})
 
 def show_service_finally(request):
     template = "beautycity/serviceFinally.html"
+    for k, v in request:
+        print(f"{k}: {v}")
     context = {}
+    print(context)
     return render(request, template, {"context": context})
 
 def show_manager_page(request):
