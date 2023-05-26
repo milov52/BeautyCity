@@ -14,6 +14,4 @@ urlpatterns = [
     path('manager/', views.show_manager_page, name='manager'),
     path('make_payment/', views.make_payment, name='make_payment'),
     path('make_payment/<int:order_id>', views.make_payment_by_id, name='make_payment'),
-    # path('make_payment/', views.make_payment, name='make_payment'),
-    path('update_payment_status', views.update_payment_status, name='update_payment_status')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

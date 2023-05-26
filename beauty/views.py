@@ -193,17 +193,3 @@ def make_payment(request):
         update_paid_status(payment.id)
 
         return redirect(confirmation_url)
-
-
-@csrf_exempt
-def update_payment_status(request):
-    if request.method == 'POST':
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        if body['object']['status'] == 'succeeded':
-            payment_id = body['object']['id']
-            orders = ServiceSignUp.objects.filter(payment_id=payment_id).all()
-            for order in orders:
-                order.paid = True
-            ServiceSignUp.objects.bulk_update(orders, ['paid'])
-    return HttpResponse(status=200)
