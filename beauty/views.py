@@ -3,9 +3,7 @@ import uuid
 
 from django.contrib.auth import login
 from django.db.models import Avg, Count
-from django.shortcuts import redirect, render
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
+from django.shortcuts import redirect, render, reverse
 
 from beatycity import settings
 from beatycity.settings import API_KEY, SHOP_ID
