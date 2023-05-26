@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render
 
 from beatycity import settings
 from users.models import SMSCode, User
-from .models import Salon, Service, Master, Review
+from .models import Master, Review, Salon, Service, ServiceSignUp
 
 
 def show_home(request):
@@ -29,7 +29,8 @@ def show_home(request):
             body_data = json.loads(request.body)
             phone_number = request.session['phone_number'] = body_data["phone_number"]
             try:
-                user, _ = User.objects.get_or_create(phone_number=phone_number)
+                user, _ = User.objects.get_or_create(username=phone_number,
+                                                     phone_number=phone_number)
                 SMSCode.objects.filter(client=user).delete()
                 SMSCode.objects.create(number='1234', client=user)
             except:
@@ -60,8 +61,50 @@ def show_home(request):
 
 def show_notes(request):
     template = "beautycity/notes.html"
-    context = {}
-    return render(request, template, {"context": context})
+
+    signups_and_dates = {}
+    paid_sum = 0
+    for signup in ServiceSignUp.objects.select_related('service', 'master', 'salon'):
+        month_number = int(str(signup.datetime.datetime)[5:7])
+        if month_number == 1:
+            month = 'января'
+        elif month_number == 2:
+            month = 'февраля'
+        elif month_number == 3:
+            month = 'марта'
+        elif month_number == 4:
+            month = 'апреля'
+        elif month_number == 5:
+            month = 'мая'
+        elif month_number == 6:
+            month = 'июня'
+        elif month_number == 7:
+            month = 'июля'
+        elif month_number == 8:
+            month = 'августа'
+        elif month_number == 9:
+            month = 'сентября'
+        elif month_number == 10:
+            month = 'октября'
+        elif month_number == 11:
+            month = 'ноября'
+        elif month_number == 12:
+            month = 'декабря'
+        else:
+            month = ''
+
+        formatted_date = str(signup.datetime.datetime)[8:10] + ' ' + month + ' - ' + str(signup.datetime.datetime)[
+                                                                                     11:16]
+        signups_and_dates[signup] = formatted_date
+        if not signup.paid:
+            paid_sum += signup.service.price
+
+    context = {
+        'signups_and_dates': signups_and_dates,
+        'paid_sum': paid_sum,
+    }
+
+    return render(request, template, context)
 
 
 def show_service(request):
@@ -69,6 +112,10 @@ def show_service(request):
     context = {}
     return render(request, template, {"context": context})
 
+def show_service_finally(request):
+    template = "beautycity/serviceFinally.html"
+    context = {}
+    return render(request, template, {"context": context})
 
 def show_manager_page(request):
     template = "beautycity/admin.html"
