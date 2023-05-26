@@ -146,7 +146,7 @@ def make_payment_by_id(request, order_id):
             },
             "confirmation": {
                 "type": "redirect",
-                "return_url": request.build_absolute_uri('/notes/')
+                "return_url": settings.RETURN_URL
             },
             "capture": True,
             "description": f'Оплата по заказу {order_id}'
@@ -176,7 +176,7 @@ def make_payment(request):
             },
             "confirmation": {
                 "type": "redirect",
-                "return_url": request.build_absolute_uri('/notes/')
+                 "return_url": settings.RETURN_URL
             },
             "capture": True,
             "description": f'Оплата по заказам'
