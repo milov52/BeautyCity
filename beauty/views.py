@@ -75,7 +75,7 @@ def show_notes(request):
 
     signups_and_dates = {}
     paid_sum = 0
-    for signup in ServiceSignUp.objects.select_related('service', 'master', 'salon'):
+    for signup in ServiceSignUp.objects.select_related('service', 'master', 'salon').filter(user=request.user):
         month_number = int(str(signup.datetime.datetime)[5:7])
         if month_number == 1:
             month = 'января'
