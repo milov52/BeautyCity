@@ -63,9 +63,6 @@
             'phone_number': document.getElementById('tel').value
         };
 
-        console.log('csrfmiddlewaretoken: ' + csrftoken);
-        console.log(data);
-
         try {
             const response = await fetch(
                 '{% url 'beauty:index' %}',

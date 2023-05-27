@@ -150,37 +150,33 @@ def show_service(request):
 
 def show_service_finally(request):
     #template = "beautycity/serviceFinally.html"
-    salon = request.GET['salon'].split(":")
-    print(salon)
+    salon = request.GET['salon']
     service = request.GET['service']
-    print(service)
     master = request.GET['master'].split(":")
-    print(master)
     year = request.GET['year']
-    print(year)
     month = request.GET['month']
-    print(month)
     day = request.GET['day']
-    print(day)
     time = request.GET['time'].split(":")
-    print(time)
     name = request.GET['name']
-    print(name)
     phone = request.GET['phone']
-    print(phone)
     text = request.GET['text']
-    print(text)
 
-    user, _ = User.objects.get_or_create(
-        username=name,
+    user, is_new_user = User.objects.get_or_create(
         phone_number=phone,
+        username=phone
     )
+    if is_new_user:
+        user.first_name = name
+        user.save()
+    login(request, user, backend=settings.AUTHENTICATION_BACKENDS[0])
+
+
     service = Service.objects.get(name=service)
     master = Master.objects.get(
         first_name=master[0],
         last_name=master[1],
     )
-    salon = Salon.objects.get(name=salon[0])
+    salon = Salon.objects.get(name=salon)
     date_time = datetime(
         int(year),
         int(month),
@@ -188,8 +184,8 @@ def show_service_finally(request):
         int(time[0])+3,
         int(time[1]),
     )
-    print(date_time)
-    date_time = AvailableDateTime.objects.get(
+
+    date_time = AvailableDateTime.objects.create(
         datetime=date_time
     )
 
@@ -199,14 +195,12 @@ def show_service_finally(request):
         datetime=date_time,
         salon=salon,
         tips=0,
-        name=name,
-        phone=phone,
         user=user,
         question=text,
     )
 
     #return render(request, template)
-    return redirect("/")
+    return redirect("beauty:notes")
 
 
 def show_manager_page(request):

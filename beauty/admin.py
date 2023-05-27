@@ -64,5 +64,5 @@ class AvailableDateTimeAdmin(admin.ModelAdmin):
 
 @admin.register(ServiceSignUp)
 class ServiceSignUpTimeAdmin(admin.ModelAdmin):
-    search_fields = ['phone', 'name']
-    list_display = ['phone', 'service', 'master', 'salon', 'datetime']
+    search_fields = ['user']
+    list_display = ['user', 'service', 'master', 'salon', 'datetime']
