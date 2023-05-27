@@ -32,11 +32,7 @@ class Service(models.Model):
     name = models.CharField(max_length=255)
     price = models.IntegerField()
     photo = models.ImageField(upload_to='service_photos/')
-    salon = models.ForeignKey(
-        Salon,
-        on_delete=models.CASCADE,
-        related_name="available_services",
-    )
+
     type = models.ForeignKey(
         ServiceType,
         on_delete=models.CASCADE,

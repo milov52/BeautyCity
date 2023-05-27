@@ -25,8 +25,8 @@ class ServiceTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    search_fields = ['name', 'salon']
-    list_display = ['name', 'price', 'salon']
+    search_fields = ['name']
+    list_display = ['name', 'price']
     list_filter = ['price']
 
 

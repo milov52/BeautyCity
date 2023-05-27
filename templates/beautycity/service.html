@@ -15,13 +15,8 @@
           <button class="service__btn btn">Запись по телефону</button>
         </div>
 
-        <form action="http://127.0.0.1:8000/service-finally/" class="service__form">
-{#           <select name="selectSalon" id="" class="accordion">#}
-{#                        <option value="" selected>(Выберите салон)</option>#}
-{#                        <option value="salon1" >Салон 1</option>#}
-{#                        <option value="salon2" >Салон 2</option>#}
-{#                        <option value="salon3" >Салон 3</option>#}
-{#                    </select>#}
+        <form action="{% url 'beauty:service-finally' %}" class="service__form">
+
 
           <div class="service__form_block service__salons">
             <button class="accordion" id="id_salon">(Выберите салон)</button>
@@ -42,7 +37,6 @@
                 {% if service_type.services %}
                   <button class="accordion">{{ service_type.name }}</button>
                   <div class="panel">
-                    <!-- <div class="accordion__block_intro">Макияж</div> -->
                     <div class="accordion__block_items">
                       {% for service in service_type.services %}
                         <div class="accordion__block_item fic">
