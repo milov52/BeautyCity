@@ -4,11 +4,20 @@ import uuid
 from django.contrib.auth import login
 from django.db.models import Avg, Count
 from django.shortcuts import redirect, render, reverse
+from datetime import datetime
 
 from beatycity import settings
 from beatycity.settings import API_KEY, SHOP_ID
 from users.models import SMSCode, User
-from .models import Master, Review, Salon, Service, ServiceSignUp
+from .models import (
+    Master,
+    Review,
+    Salon,
+    Service,
+    ServiceSignUp,
+    ServiceType,
+    AvailableDateTime,
+)
 from yookassa import Configuration, Payment
 
 def show_home(request):
@@ -26,7 +35,7 @@ def show_home(request):
         'reviews': reviews
     }
 
-    if request.method == "POST" and not "num1" in request.POST:
+    if request.method == "POST" and "num1" not in request.POST:
         if request.body:
             body_data = json.loads(request.body)
             phone_number = request.session['phone_number'] = body_data["phone_number"]
@@ -111,14 +120,93 @@ def show_notes(request):
 
 def show_service(request):
     template = "beautycity/service.html"
-    context = {}
-    return render(request, template, {"context": context})
+
+    service_types = ServiceType.objects.all()
+    salons = Salon.objects.all()
+    masters = Master.objects.all()
+    dates = AvailableDateTime.objects.all()
+
+    service_types = [
+        {
+            'name': service_type.name,
+            'services': [
+                {
+                    'name': service.name,
+                    'price': service.price,
+                } for service in service_type.services.all()
+            ],
+        } for service_type in service_types
+    ]
+
+    context = {
+        'salons': salons,
+        'masters': masters,
+        'service_types': service_types,
+        'dates': dates,
+    }
+
+    return render(request, template, context)
 
 
 def show_service_finally(request):
-    template = "beautycity/serviceFinally.html"
-    context = {}
-    return render(request, template, {"context": context})
+    #template = "beautycity/serviceFinally.html"
+    salon = request.GET['salon'].split(":")
+    print(salon)
+    service = request.GET['service']
+    print(service)
+    master = request.GET['master'].split(":")
+    print(master)
+    year = request.GET['year']
+    print(year)
+    month = request.GET['month']
+    print(month)
+    day = request.GET['day']
+    print(day)
+    time = request.GET['time'].split(":")
+    print(time)
+    name = request.GET['name']
+    print(name)
+    phone = request.GET['phone']
+    print(phone)
+    text = request.GET['text']
+    print(text)
+
+    user, _ = User.objects.get_or_create(
+        username=name,
+        phone_number=phone,
+    )
+    service = Service.objects.get(name=service)
+    master = Master.objects.get(
+        first_name=master[0],
+        last_name=master[1],
+    )
+    salon = Salon.objects.get(name=salon[0])
+    date_time = datetime(
+        int(year),
+        int(month),
+        int(day),
+        int(time[0])+3,
+        int(time[1]),
+    )
+    print(date_time)
+    date_time = AvailableDateTime.objects.get(
+        datetime=date_time
+    )
+
+    ServiceSignUp.objects.create(
+        service=service,
+        master=master,
+        datetime=date_time,
+        salon=salon,
+        tips=0,
+        name=name,
+        phone=phone,
+        user=user,
+        question=text,
+    )
+
+    #return render(request, template)
+    return redirect("/")
 
 
 def show_manager_page(request):
