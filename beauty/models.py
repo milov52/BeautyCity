@@ -127,7 +127,6 @@ class ServiceSignUp(models.Model):
     payment_id = models.CharField(verbose_name="Айди платежа", max_length=100, blank=True)
     paid = models.BooleanField(default=False)
     tips = models.IntegerField()
-
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
