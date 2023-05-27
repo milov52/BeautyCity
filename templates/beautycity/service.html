@@ -15,109 +15,63 @@
           <button class="service__btn btn">Запись по телефону</button>
         </div>
 
-        <form action="#" class="service__form">
+        <form action="http://127.0.0.1:8000/service-finally/" class="service__form">
 {#           <select name="selectSalon" id="" class="accordion">#}
 {#                        <option value="" selected>(Выберите салон)</option>#}
 {#                        <option value="salon1" >Салон 1</option>#}
 {#                        <option value="salon2" >Салон 2</option>#}
 {#                        <option value="salon3" >Салон 3</option>#}
 {#                    </select>#}
-          <div class="service__form_block service__salons">
 
+          <div class="service__form_block service__salons">
             <button class="accordion" id="id_salon">(Выберите салон)</button>
             <div class="panel">
-              <div class="accordion__block fic">
-                <div class="accordion__block_intro">BeautyCity Пушкинская</div>
-                <div class="accordion__block_address">ул. Пушкинская, д. 78А</div>
-              </div>
-              <div class="accordion__block fic">
-                <div class="accordion__block_intro">BeautyCity Ленина</div>
-                <div class="accordion__block_address">ул. Ленина, д. 211</div>
-              </div>
-              <div class="accordion__block fic">
-                <div class="accordion__block_intro">BeautyCity Красная</div>
-                <div class="accordion__block_address">ул. Красная, д. 10</div>
-              </div>
+              {% for salon in salons %}
+                <div class="accordion__block fic">
+                  <div class="accordion__block_intro">{{ salon.name }}</div>
+                  <div class="accordion__block_address">{{ salon.address }}</div>
+                </div>
+              {% endfor %}
             </div>
           </div>
+
           <div class="service__form_block service__services">
             <button class="accordion" id="id_service">(Выберите услугу)</button>
             <div class="panel">
-              <button class="accordion">Парикмахерские услуги</button>
-              <div class="panel">
-
-                <!-- <div class="accordion__block_intro">Макияж</div> -->
-                <div class="accordion__block_items">
-                  <div class="accordion__block_item fic">
-                    <div class="accordion__block_item_intro">Окрашивание волос</div>
-                    <div class="accordion__block_item_address">5 000 ₽</div>
+              {% for service_type in service_types %}
+                {% if service_type.services %}
+                  <button class="accordion">{{ service_type.name }}</button>
+                  <div class="panel">
+                    <!-- <div class="accordion__block_intro">Макияж</div> -->
+                    <div class="accordion__block_items">
+                      {% for service in service_type.services %}
+                        <div class="accordion__block_item fic">
+                          <div class="accordion__block_item_intro">{{ service.name }}</div>
+                          <div class="accordion__block_item_address">{{ service.price }}₽</div>
+                        </div>
+                      {% endfor %}
+                    </div>
                   </div>
-
-                  <div class="accordion__block_item fic">
-                    <div class="accordion__block_item_intro">Укладка волос</div>
-                    <div class="accordion__block_item_address">1 500 ₽</div>
-                  </div>
-                </div>
-
-              </div>
-              <button class="accordion">Ногтевой сервис</button>
-              <div class="panel">
-
-                <!-- <div class="accordion__block_intro">Макияж</div> -->
-                <div class="accordion__block_items">
-                  <div class="accordion__block_item fic">
-                    <div class="accordion__block_item_intro">Маникюр. Классический</div>
-                    <div class="accordion__block_item_address">1 400 ₽</div>
-                  </div>
-
-                  <div class="accordion__block_item fic">
-                    <div class="accordion__block_item_intro">Педикюр</div>
-                    <div class="accordion__block_item_address">1 400 ₽</div>
-                  </div>
-                  <div class="accordion__block_item fic">
-                    <div class="accordion__block_item_intro">Наращивание ногтей</div>
-                    <div class="accordion__block_item_address">1 400 ₽</div>
-                  </div>
-                </div>
-
-              </div>
-              <!--  <div class="accordion__block">
-                               <div class="accordion__block_intro">Парикмахерские услуги</div>
-                           </div>
-                           <div class="accordion__block">
-                               <div class="accordion__block_intro">Ногтевой сервис</div>
-                           </div> -->
-              <button class="accordion">Макияж</button>
-              <div class="panel">
-
-
-                <!-- <div class="accordion__block_intro">Макияж</div> -->
-                <div class="accordion__block_items">
-                  <div class="accordion__block_item fic">
-                    <div class="accordion__block_item_intro">Дневной макияж</div>
-                    <div class="accordion__block_item_address">1 400 ₽</div>
-                  </div>
-
-                  <div class="accordion__block_item fic">
-                    <div class="accordion__block_item_intro">Свадебный макияж</div>
-                    <div class="accordion__block_item_address">3 000 ₽</div>
-                  </div>
-                  <div class="accordion__block_item fic">
-                    <div class="accordion__block_item_intro">Вечерний макияж</div>
-                    <div class="accordion__block_item_address">2 000 ₽</div>
-                  </div>
-                </div>
-
-              </div>
+                {% endif %}
+              {% endfor %}
             </div>
           </div>
+
+
           <div class="service__form_block service__masters">
             <button class="accordion" id="id_master">(Выберите мастера)</button>
             <div class="panel">
+              {% for master in masters %}
+                <div class="accordion__block fic">
+                  {% if master.photo.url %}
+                    <img src="{{ master.photo.url }}" alt="avatar" class="accordion__block_img">
+                  {% endif %}
+                  <div class="accordion__block_master">{{ master.first_name }} {{ master.last_name }}</div>
+                  <div class="accordion__block_prof">{{ master.specialty }}</div>
+                </div>
+              {% endfor %}
 
             </div>
-
-
           </div>
 
         </form>
@@ -133,44 +87,83 @@
             <div class="col-md-4">
               <div id="datepickerHere"></div>
             </div>
+            {% load tz %}
+            {% localtime off %}
             <div class="col-md-8">
               <div class="time__elems">
                 <div class="time__items">
                   <div class="time__elems_intro">Утро</div>
                   <div class="time__elems_elem fic">
-                    <button data-time="10:00" class="time__elems_btn">10:00</button>
-                    <button data-time="10:30" class="time__elems_btn">10:30</button>
+                    {% for date in dates %}
+                      {% if date.datetime.hour < 12 %}
+                        <button data-time="{{ date.datetime.hour }}:{{ date.datetime.minute }}" class="time__elems_btn">{{ date.datetime.hour }}:{{ date.datetime.minute }}</button>
+                      {% endif %}
+                    {% endfor %}
                   </div>
                 </div>
                 <div class="time__items">
                   <div class="time__elems_intro">День</div>
                   <div class="time__elems_elem fic">
-                    <button data-time="12:00" class="time__elems_btn">12:00</button>
-                    <button data-time="12:30" class="time__elems_btn">12:30</button>
-                    <button data-time="15:00" class="time__elems_btn">15:00</button>
-                    <button data-time="16:30" class="time__elems_btn">16:30</button>
+                    {% for date in dates %}
+                      {% if 17 > date.datetime.hour >= 12 %}
+                        <button data-time="{{ date.datetime.hour }}:{{ date.datetime.minute }}" class="time__elems_btn">{{ date.datetime.hour }}:{{ date.datetime.minute }}</button>
+                      {% endif %}
+                    {% endfor %}
                   </div>
                 </div>
                 <div class="time__items">
                   <div class="time__elems_intro">Вечер</div>
                   <div class="time__elems_elem fic">
-                    <button data-time="17:00" class="time__elems_btn">17:00</button>
-                    <button data-time="18:30" class="time__elems_btn">18:30</button>
-                    <button data-time="19:00" class="time__elems_btn">19:00</button>
+                    {% for date in dates %}
+                      {% if 17 <= date.datetime.hour %}
+                        <button data-time="{{ date.datetime.hour }}:{{ date.datetime.minute }}" class="time__elems_btn">{{ date.datetime.hour }}:{{ date.datetime.minute }}</button>
+                      {% endif %}
+                    {% endfor %}
                   </div>
                 </div>
               </div>
             </div>
+            {% endlocaltime %}
           </div>
         </div>
+
+        <div class="serviceFinally__form_itesm" id="id_client_form">
+          <div class="contacts__form_block fic">
+            <input type="text" id="id_client_name" name="fname" class="contacts__form_iunput" placeholder="Введите имя" required="">
+            <div class="contacts__form_inputBlock">
+              <input type="text" id="id_client_phone" name="tel" class="contacts__form_iunput" placeholder="+7(999)999--99-99" required="">
+            </div>
+          </div>
+
+          <textarea name="contactsTextarea" id="id_client_text" class="contacts__form_textarea" placeholder="Вопрос(необязательно)"></textarea>
+          <div class="contacts__form_checkboxBlock fic">
+            <input type="checkbox" class="contacts__form_checkbox" checked="">
+            <span class="contacts__form_checkboxBlock__intro">Я согласен(а) с политикой конфидециоальности</span>
+          </div>
+        </div>
+
         <div class="time__btns">
           <div class="row">
             <div class="col-md-12">
-
-              <button onclick="location.href='{% url 'beauty:service-finally' %}'" class="time__btns_next">
-                       Далее</button>
-              <button onclick="location.href='{% url 'beauty:index' %}'" class="time__btns_next">
-                       На главную</button>
+              <script>
+                function selectParameters(){
+                  var date = document.getElementsByClassName("air-datepicker-cell -day- -selected-")[0];
+                  var year = date.getAttribute("data-year");
+                  var month = date.getAttribute("data-month");
+                  var day = date.getAttribute("data-date");
+                  var time = document.getElementsByClassName("time__elems_btn active")[0].textContent;
+                  var salon = document.getElementById("id_salon").textContent.split(' ');
+                  var service = document.getElementById("id_service").textContent.split(' ')[0];
+                  var master = document.getElementById("id_master").getElementsByClassName("accordion__block_master")[0].textContent.split(' ');
+                  var clientName = document.getElementById("id_client_name").value;
+                  var clientPhone = document.getElementById("id_client_phone").value;
+                  var clientText= document.getElementById("id_client_text").value;
+                  url = '{% url 'beauty:service-finally' %}'+'?salon='+salon[0]+":"+salon[salon.length - 1]+'&service='+service+'&master='+master[0]+':'+master[1]+'&year='+year+'&month='+month+'&day='+day+'&time='+time+'&name='+clientName+'&phone='+clientPhone+'&text='+clientText;
+                  location.href=url;
+                }
+              </script>
+              <button onclick="selectParameters()" class="serviceFinallys__form_btn">Записаться</button>
+              <button onclick="location.href='{% url 'beauty:index' %}'" class="serviceFinallys__form_back">На главную</button>
             </div>
           </div>
         </div>

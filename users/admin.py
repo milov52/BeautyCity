@@ -20,6 +20,8 @@ class CustomUserAdmin(UserAdmin):
                 'username',
                 'photo',
                 'is_manager',
+                'first_name',
+                'last_name',
             )
         }),
     )
