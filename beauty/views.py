@@ -1,24 +1,17 @@
 import json
 import uuid
+from datetime import datetime
 
 from django.contrib.auth import login
 from django.db.models import Avg, Count
-from django.shortcuts import redirect, render, reverse
-from datetime import datetime
+from django.shortcuts import redirect, render
+from yookassa import Configuration, Payment
 
 from beatycity import settings
 from beatycity.settings import API_KEY, SHOP_ID
 from users.models import SMSCode, User
-from .models import (
-    Master,
-    Review,
-    Salon,
-    Service,
-    ServiceSignUp,
-    ServiceType,
-    AvailableDateTime,
-)
-from yookassa import Configuration, Payment
+from .models import (AvailableDateTime, Master, Review, Salon, Service, ServiceSignUp, ServiceType)
+
 
 def show_home(request):
     template = "beautycity/index.html"
@@ -40,8 +33,7 @@ def show_home(request):
             body_data = json.loads(request.body)
             phone_number = request.session['phone_number'] = body_data["phone_number"]
             try:
-                user, _ = User.objects.get_or_create(username=phone_number,
-                                                     phone_number=phone_number)
+                user, _ = User.objects.get_or_create(phone_number=phone_number)
                 SMSCode.objects.filter(client=user).delete()
                 SMSCode.objects.create(number='1234', client=user)
             except:
@@ -147,29 +139,25 @@ def show_service(request):
 
     return render(request, template, context)
 
-
 def show_service_finally(request):
-    #template = "beautycity/serviceFinally.html"
     salon = request.GET['salon']
     service = request.GET['service']
-    master = request.GET['master'].split(":")
+    master = request.GET['master'].split()
     year = request.GET['year']
     month = request.GET['month']
     day = request.GET['day']
     time = request.GET['time'].split(":")
     name = request.GET['name']
-    phone = request.GET['phone']
+    phone = '+' + request.GET['phone'].strip()
     text = request.GET['text']
 
     user, is_new_user = User.objects.get_or_create(
-        phone_number=phone,
-        username=phone
+        phone_number=phone
     )
     if is_new_user:
         user.first_name = name
         user.save()
     login(request, user, backend=settings.AUTHENTICATION_BACKENDS[0])
-
 
     service = Service.objects.get(name=service)
     master = Master.objects.get(
@@ -180,8 +168,8 @@ def show_service_finally(request):
     date_time = datetime(
         int(year),
         int(month),
-        int(day),
-        int(time[0])+3,
+        int(day) + 1,
+        int(time[0]),
         int(time[1]),
     )
 
@@ -199,7 +187,7 @@ def show_service_finally(request):
         question=text,
     )
 
-    #return render(request, template)
+    # return render(request, template)
     return redirect("beauty:notes")
 
 
@@ -214,6 +202,7 @@ def update_paid_status(payment_id):
     for order in orders:
         order.paid = True
     ServiceSignUp.objects.bulk_update(orders, ['paid'])
+
 
 def make_payment_by_id(request, order_id):
     if request.method == "GET":
@@ -243,6 +232,7 @@ def make_payment_by_id(request, order_id):
         update_paid_status(payment.id)
         return redirect(confirmation_url)
 
+
 def make_payment(request):
     if request.method == "GET":
         Configuration.account_id = SHOP_ID
@@ -258,12 +248,12 @@ def make_payment(request):
             },
             "confirmation": {
                 "type": "redirect",
-                 "return_url": settings.RETURN_URL
+                "return_url": settings.RETURN_URL
             },
             "capture": True,
             "description": f'Оплата по заказам'
         }, uuid.uuid4())
-        unpaids_signups =ServiceSignUp.objects.filter(paid=False).all()
+        unpaids_signups = ServiceSignUp.objects.filter(paid=False).all()
         for unpaids_signup in unpaids_signups:
             unpaids_signup.payment_id = payment.id
 

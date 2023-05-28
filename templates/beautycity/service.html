@@ -16,8 +16,6 @@
         </div>
 
         <form action="{% url 'beauty:service-finally' %}" class="service__form">
-
-
           <div class="service__form_block service__salons">
             <button class="accordion" id="id_salon">(Выберите салон)</button>
             <div class="panel">
@@ -72,54 +70,7 @@
       </div>
     </div>
   </section>
-  {#  <section id="time">#}
-  {#    <div class="container">#}
-  {#      <div class="time">#}
-  {#        <h2 class="time__title">Выберите время</h2>#}
-  {#        <div class="time__block">#}
-  {#          <div class="row">#}
-  {#            <div class="col-md-4">#}
-  {#              <div id="datepickerHere"></div>#}
-  {#            </div>#}
-  {#            {% load tz %}#}
-  {#            {% localtime off %}#}
-  {#            <div class="col-md-8">#}
-  {#              <div class="time__elems">#}
-  {#                <div class="time__items">#}
-  {#                  <div class="time__elems_intro">Утро</div>#}
-  {#                  <div class="time__elems_elem fic">#}
-  {#                    {% for date in dates %}#}
-  {#                      {% if date.datetime.hour < 12 %}#}
-  {#                        <button data-time="{{ date.datetime.hour }}:{{ date.datetime.minute }}" class="time__elems_btn">{{ date.datetime.hour }}:{{ date.datetime.minute }}</button>#}
-  {#                      {% endif %}#}
-  {#                    {% endfor %}#}
-  {#                  </div>#}
-  {#                </div>#}
-  {#                <div class="time__items">#}
-  {#                  <div class="time__elems_intro">День</div>#}
-  {#                  <div class="time__elems_elem fic">#}
-  {#                    {% for date in dates %}#}
-  {#                      {% if 17 > date.datetime.hour >= 12 %}#}
-  {#                        <button data-time="{{ date.datetime.hour }}:{{ date.datetime.minute }}" class="time__elems_btn">{{ date.datetime.hour }}:{{ date.datetime.minute }}</button>#}
-  {#                      {% endif %}#}
-  {#                    {% endfor %}#}
-  {#                  </div>#}
-  {#                </div>#}
-  {#                <div class="time__items">#}
-  {#                  <div class="time__elems_intro">Вечер</div>#}
-  {#                  <div class="time__elems_elem fic">#}
-  {#                    {% for date in dates %}#}
-  {#                      {% if 17 <= date.datetime.hour %}#}
-  {#                        <button data-time="{{ date.datetime.hour }}:{{ date.datetime.minute }}" class="time__elems_btn">{{ date.datetime.hour }}:{{ date.datetime.minute }}</button>#}
-  {#                      {% endif %}#}
-  {#                    {% endfor %}#}
-  {#                  </div>#}
-  {#                </div>#}
-  {#              </div>#}
-  {#            </div>#}
-  {#            {% endlocaltime %}#}
-  {#          </div>#}
-  {#        </div>#}
+
   <section id="time">
     <div class="container">
       <div class="time">
@@ -159,101 +110,80 @@
             </div>
           </div>
         </div>
-        <form action="." method="post">
-          {% csrf_token %}
-          <div class="serviceFinally__form_itesm" id="id_client_form">
-            <div class="contacts__form_block fic">
-              <input type="text" id="id_client_name" name="fname" class="contacts__form_iunput"
-                     placeholder="Введите имя">
+
+        <div class="serviceFinally__form_itesm" id="id_client_form">
+          <div class="contacts__form_block fic">
+            {% if user.is_authenticated %}
               <div class="contacts__form_inputBlock">
-                {#              <input type="text" id="id_client_phone" name="tel" class="contacts__form_iunput" placeholder="+7(999)999--99-99" required="">#}
+                <input type="text" id="id_client_name" name="fname" class="contacts__form_iunput"
+                       placeholder="Введите имя" value={{ user.first_name }}>
+
+                <input type="text" id="id_client_phone" name="tel" class="contacts__form_iunput" type="tel"
+                       placeholder="+7(999)999-99-99" value="{{ user.phone_number }}"
+                       pattern="\+7\s?[\(]{0,1}9[0-9]{2}[\)]{0,1}\s?\d{3}[-]{0,1}\d{2}[-]{0,1}\d{2}" required="">
+              </div>
+
+            {% else %}
+              <div class="contacts__form_inputBlock">
+                <input type="text" id="id_client_name" name="fname" class="contacts__form_iunput"
+                       placeholder="Введите имя">
+
                 <input type="text" id="id_client_phone" name="tel" class="contacts__form_iunput" type="tel"
                        placeholder="+7(999)999-99-99"
                        pattern="\+7\s?[\(]{0,1}9[0-9]{2}[\)]{0,1}\s?\d{3}[-]{0,1}\d{2}[-]{0,1}\d{2}" required="">
               </div>
-            </div>
+            {% endif %}
 
-            <textarea name="contactsTextarea" id="id_client_text" class="contacts__form_textarea"
-                      placeholder="Вопрос(необязательно)"></textarea>
-            <div class="contacts__form_checkboxBlock fic">
-              <input type="checkbox" class="contacts__form_checkbox" checked="">
-              <span class="contacts__form_checkboxBlock__intro">Я согласен(а) с политикой конфидециоальности</span>
-            </div>
           </div>
 
-          <div class="time__btns">
-            <div class="row">
-              <div class="col-md-12">
-                                <script>
-                                    function selectParameters() {
-                                        var date = document.getElementsByClassName("air-datepicker-cell -day- -selected-")[0];
-                                        var year = date.getAttribute("data-year");
-                                        var month = date.getAttribute("data-month");
-                                        var day = date.getAttribute("data-date");
-                                        var time = document.getElementsByClassName("time__elems_btn active")[0].textContent;
-                                        var salon = document.getElementById("id_salon").textContent.split(' (')[0];
-                                        var service = document.getElementById("id_service").textContent.split(' (')[0];
-                                        var master = document.getElementById("id_master").getElementsByClassName("accordion__block_master")[0].textContent.split(' ');
-                                        var clientName = document.getElementById("id_client_name").value;
-                                        var clientPhone = document.getElementById("id_client_phone").value;
-                                        var clientText = document.getElementById("id_client_text").value;
-                                        url = '{% url 'beauty:service-finally' %}' + '?salon=' + salon + '&service=' + service + '&master=' + master[0] + ':' + master[1] + '&year=' + year + '&month=' + month + '&day=' + day + '&time=' + time + '&name=' + clientName + '&phone=' + clientPhone + '&text=' + clientText;
-                                        location.href = url;
-                                    }
-                                </script>
-                                <button onclick="selectParameters()" class="serviceFinallys__form_btn" id="service_btn_add">Записаться
-{#                <button onclick="selectParameters()" class="serviceFinallys__form_btn" id="service_btn_add">Записаться#}
-{#                </button>#}
-                <button onclick="location.href='{% url 'beauty:index' %}'" class="serviceFinallys__form_back">На
-                  главную
-                </button>
-              </div>
+          <textarea name="contactsTextarea" id="id_client_text" class="contacts__form_textarea"
+                    placeholder="Вопрос(необязательно)"></textarea>
+          <div class="contacts__form_checkboxBlock fic">
+            <input type="checkbox" class="contacts__form_checkbox" checked="">
+            <span class="contacts__form_checkboxBlock__intro">Я согласен(а) с политикой конфидециоальности</span>
+          </div>
+        </div>
+
+        <div class="time__btns">
+          <div class="row">
+            <div class="col-md-12">
+              <script>
+                  function selectParameters() {
+                      var clientPhone = document.getElementById("id_client_phone").value;
+
+                      let phonePattern = /^\+\d{11}$/; // Регулярное выражение для проверки формата#}
+                      if (!phonePattern.test(clientPhone)) {
+                          alert("Пожалуйста, введите корректный номер телефона.");
+                          return; // Прекращение выполнения функции
+                      }
+
+                      var date = document.getElementsByClassName("air-datepicker-cell -day- -selected-")[0];
+                      var year = date.getAttribute("data-year");
+                      var month = date.getAttribute("data-month");
+                      var day = date.getAttribute("data-date");
+                      var time = document.getElementsByClassName("time__elems_btn active")[0].textContent;
+                      var salon = document.getElementById("id_salon").textContent.split(' (')[0];
+                      var service = document.getElementById("id_service").textContent.split(' (')[0];
+                      var master = document.getElementById("id_master").getElementsByClassName("accordion__block_master")[0].textContent;
+                      var clientName = document.getElementById("id_client_name").value;
+                      var clientText = document.getElementById("id_client_text").value;
+
+                      url = '{% url 'beauty:service-finally' %}' + '?salon=' + salon + '&service=' + service + '&master=' + master + '&year=' + year + '&month=' + month + '&day=' + day + '&time=' + time + '&name=' + clientName + '&phone=' + clientPhone + '&text=' + clientText;
+                      location.href = url;
+                  }
+              </script>
+              <button onclick="selectParameters()" class="serviceFinallys__form_btn" id="service_btn_add">
+                Записаться
+              </button>
+              <button onclick="location.href='{% url 'beauty:index' %}'" class="serviceFinallys__form_back">На
+                главную
+              </button>
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   </section>
 
-{#  <script>#}
-{#      const button = document.getElementById('service_btn_add');#}
-{##}
-{#      button.addEventListener('click', async _ => {#}
-{#          const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;#}
-{#          let date = document.getElementsByClassName("air-datepicker-cell -day- -selected-")[0];#}
-{#          let data = {#}
-{#              'year': date.getAttribute("data-year");#}
-{#              'month': date.getAttribute("data-month");#}
-{#              'day': date.getAttribute("data-date");#}
-{#              'time:' document.getElementsByClassName("time__elems_btn active")[0].textContent;#}
-{#              'salon:' document.getElementById("id_salon").textContent.split(' (')[0];#}
-{#              'service': document.getElementById("id_service").textContent.split(' (')[0];#}
-{#              'master': document.getElementById("id_master").getElementsByClassName("accordion__block_master")[0].textContent.split(' ');#}
-{#              'clientName': document.getElementById("id_client_name").value;#}
-{#              'clientPhone': document.getElementById("id_client_phone").value;#}
-{#              'clientText:': document.getElementById("id_client_text").value;#}
-{#          }#}
-{##}
-{#          try {#}
-{#              const response = await fetch(#}
-{#                  '{% url 'beauty:service-finally' %}',#}
-{#                  {#}
-{#                      headers: {#}
-{#                          'X-CSRFToken': csrftoken,#}
-{#                          'Accept': 'application/json',#}
-{#                          'Content-Type': 'application/json'#}
-{#                      },#}
-{#                      method: 'post',#}
-{#                      body: JSON.stringify(data),#}
-{#                  }#}
-{#              );#}
-{##}
-{#              console.log('Completed!', response);#}
-{##}
-{#          } catch (err) {#}
-{#              console.error(`Error: ${err}`);#}
-{#          }#}
-{#      });#}
-{#  </script>#}
 {% endblock content %}
 
