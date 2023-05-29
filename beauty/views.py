@@ -140,6 +140,7 @@ def show_service(request):
 
     return render(request, template, context)
 
+
 def show_service_finally(request):
     salon = request.GET['salon']
     service = request.GET['service']
@@ -169,8 +170,8 @@ def show_service_finally(request):
     salon = Salon.objects.get(name=salon)
     date_time = datetime(
         int(year),
-        int(month),
-        int(day) + 1,
+        int(month) + 1,
+        int(day),
         int(time[0]),
         int(time[1]),
     )
