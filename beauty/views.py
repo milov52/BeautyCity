@@ -33,7 +33,8 @@ def show_home(request):
             body_data = json.loads(request.body)
             phone_number = request.session['phone_number'] = body_data["phone_number"]
             try:
-                user, _ = User.objects.get_or_create(phone_number=phone_number)
+                user, _ = User.objects.get_or_create(phone_number=phone_number,
+                                                     username=phone_number)
                 SMSCode.objects.filter(client=user).delete()
                 SMSCode.objects.create(number='1234', client=user)
             except:
@@ -152,7 +153,8 @@ def show_service_finally(request):
     text = request.GET['text']
 
     user, is_new_user = User.objects.get_or_create(
-        phone_number=phone
+        phone_number=phone,
+        username=phone
     )
     if is_new_user:
         user.first_name = name
